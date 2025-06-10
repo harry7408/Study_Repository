@@ -295,6 +295,9 @@ suspend fun requestNews() : News {
 
 - 함수가 아닌 코루틴을 중단시킨다는 점을 명심
 - 중단 함수는 코루틴이 아니고 코루틴을 중단할 수 있는 함수 (suspend 키워드가 붙은 함수)
+  - Coroutine 이란?
+    
+    	- ⭐ CoroutineScope, CoroutineContext, suspend chain, Continuation 객체를 포함하는 실행의 단위이다
 
 ```kotlin
 var continuation: Continuation<Unit>?=null
