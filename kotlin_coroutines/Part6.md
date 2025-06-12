@@ -63,6 +63,8 @@ fun main() {
 ```
 
 - main 함수의 끝에 Thread.sleep을 호출하지 않으면 Hello 만 호출되고 코루틴이 일을 할 기회가 주어지지 않는다 **(delay가 Thread를 블록시키지 않고 코루틴을 중단시킨다)**
+  - delay에 의해 코루틴만 일시중단된 채 main Thread는 즉시 반환되는데 JVM 프로세스가 종료되면 Background 에서 동작하는 코루틴도 같이 멈춰버리기 때문에 Coroutine이 일 할 기회를 얻지 못한다
+    
 - 위 방식은 Daemon Thread의 동작 방식과 유사하지만 코루틴이 훨씬 가볍다
     - Block 된 스레드를 유지하는 것은 비용이 들지만 중단된 코루틴 유지는 공짜나 다름없다
     - 둘 다 별개의 작업을 시작하며 **작업을 하는 동안 프로그램이 끝나는 것을 방지해야 한다**는 공통점이 있다.  (위의 예제에서는 Thread.sleep(2000L)이 그 역할을 한다)
@@ -102,6 +104,8 @@ Daemon Thread : 일반 스레드의 작업을 돕는 보조적인 역할을 한�
 ## runBlocking 빌더
 
 - 코루틴이 스레드를 블록 해야 하는 경우 사용 (Main 함수의 경우 프로그램을 너무 빨리 끝내지 않기 위해 스레드를 Blocking 해야 한다)
+  - Android 같은 경우는 UI와 관련된 Main Thread 1개만 가지고 있어 runBlocking 사용 시 유의해야 한다 (안쓰는 것이 좋다)
+    
 - 코루틴이 중단되었을 경우 runBlocking 빌더는 **시작한 스레드를 중단시킨다**
 
 ```kotlin
@@ -127,7 +131,7 @@ fun main() {
 2
 (1초)
 3
-Hello
+Hello // runBlocking에서 Coroutine이 delay에 의해 중단되어 Main Thread가 중단되어 마지막에 호출
 //
 runBlocking에 의해 main 함수에 Thread.sleep이 필요 없이 
 코루틴이 중단될 때 Main Thread도 같이 멈춘다
@@ -194,6 +198,8 @@ Hello
 ## async 빌더
 
 - launch 빌더 와 유사하지만 **값을 생성하도록 설계** 되어있다 (람다 표현식에 의해 반환 되어야함)
+  - 마지막 표현식이 결과 타입 <T>가 된다
+    
 - Deferred<T> 타입의 객체**(Job 객체를 상속)**를 리턴하며 Deferred에는 **작업이 끝나면 값을 반환하는 중단 메서드인 await()가 있다**
 
 ```kotlin
@@ -230,6 +236,7 @@ scope.launch {
 	)
 }
 ```
+⭐ async 빌더는 주로 두 가지 다른 곳에서 데이터를 얻어와 합치는 경우처럼 두 작업을 병렬로 실행할 때 주로 사용된다
 
 ## 구조화된 동시성
 
@@ -241,6 +248,31 @@ scope.launch {
 - 부모는 모든 자식이 작업을 마칠 때까지 기다린다
 - 부모 코루틴이 취소되면 자식 코루틴도 취소된다
 - 자식 코루틴에서 에러가 발생하면 부모 코루틴 또한 에러로 소멸한다
+> EX)
+> 
+
+```kotlin
+fun main = runBlocking {
+	this.launch { // runBlocking이 제공하는 Coroutine.()->T 리시버를 사용
+		delay(1000L)
+		print("World")
+	}
+	
+	launch { // this.launch와 동일
+		delay(1500L)
+		print("Wow")
+	}
+	
+	print("Hello")
+}
+
+// 출력 결과
+Hello
+(1초)
+World
+(0.5초)
+Wow
+```
 
 ## CoroutineScope
 
