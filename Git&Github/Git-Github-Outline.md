@@ -21,3 +21,5 @@ Ref) Git 저장소를 관리하기 위해 GitLab을 쓰기도 하나 Github이 �
 - 병합 및 충돌 해결
 - 브랜치
 - 태그
+<br></br>
+  <img width="545" height="225" alt="Image" src="https://github.com/user-attachments/assets/c5002fc2-4b6c-4d3b-86f2-482ae9506433" />
