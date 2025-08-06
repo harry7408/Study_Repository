@@ -87,6 +87,7 @@
         - origin/main : 원격 저장소의 Main Branch
         - HEAD : 현재 내가 작업 중인 커밋을 가리키는 포인터  (현재 Checkout 되어있는 Branch를 가리킨다)
     - `--grpah` 옵션의 경우 명령어 입력보다 소스트리 같은 Tool 또는 Github의 Insights → Network 항목에서 쉽게 그래프의 형태를 파악할 수 있다
+    - Github에서 Commit 내역에 `Verified` 마크가 생성되는 것은 GPG 서명된 커밋이거나 Github 웹 UI 상에서 파일을 수정하면 자동으로 Github 서명 키를 이용해서 Commit 되기 때문에 붙는다
 
 </br>
 
